@@ -1,16 +1,6 @@
-// TypeScript example: move client creation inside handler
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js'
 
-function getSupabaseClient() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // use the exact env var name your code expects
-  if (!url || !key) {
-    throw new Error('Server environment variables SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set');
-  }
-  return createClient(url, key);
-}
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder';
 
-export async function POST(req: Request) {
-  const supabase = getSupabaseClient();
-  // ...handle request
-}
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
