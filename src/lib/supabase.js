@@ -1,13 +1,16 @@
+// TypeScript example: move client creation inside handler
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+function getSupabaseClient() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // use the exact env var name your code expects
+  if (!url || !key) {
+    throw new Error('Server environment variables SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set');
+  }
+  return createClient(url, key);
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true, // שומר על המשתמש מחובר בזמן המעבר בין דפים
-    storageKey: 'supabase.auth.token',
-    // השינוי הקריטי: sessionStorage גורם למשתמש להתנתק כשסוגרים את הלשונית
-    storage: typeof window !== 'undefined' ? window.sessionStorage : null,
-  },
-});
+export async function POST(req: Request) {
+  const supabase = getSupabaseClient();
+  // ...handle request
+}
